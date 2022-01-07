@@ -2,15 +2,12 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Workspace;
-using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
+//using Microsoft.VisualStudio.Workspace;
+//using Microsoft.VisualStudio.Workspace.VSIntegration.Contracts;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Task = System.Threading.Tasks.Task;
@@ -22,7 +19,7 @@ using Task = System.Threading.Tasks.Task;
 //        public MSDNSearchResult(string displaytext, string url, string description, MSDNSearchProvider provider)
 //        {
 //            this.DisplayText = displaytext;  // Stores the text of the link
-//            // We'll use the description as tooltip - because it's pretty long and all items have it, 
+//            // We'll use the description as tooltip - because it's pretty long and all items have it,
 //            // returning it as part of Description will overload the QL popup with too much information
 //            this.Tooltip = description;
 //            // All items use the same icon
@@ -157,8 +154,8 @@ using Task = System.Threading.Tasks.Task;
 //                Uri webQuery = new Uri(String.Format("http://social.msdn.microsoft.com/search/en-US/feed?query={0}&format=RSS", Uri.EscapeDataString(this.SearchQuery.SearchString)));
 
 //                // Don't use WebClient.DownloadXXXX synchronous functions because they can only be called on one thread at a time.
-//                // After starting a search in Quick Launch the user may type a different string and start a different search, 
-//                // in which case a different MSDNSearchTask will be created (possibly on other thread) and will be used to start 
+//                // After starting a search in Quick Launch the user may type a different string and start a different search,
+//                // in which case a different MSDNSearchTask will be created (possibly on other thread) and will be used to start
 //                // a new web request - therefore we need to use async functions to do the online query.
 //                this.WebClient.DownloadDataCompleted += RSSDownloadComplete;
 //                this.WebClient.DownloadDataAsync(webQuery);
@@ -308,10 +305,10 @@ using Task = System.Threading.Tasks.Task;
 //    // 2) the provider class specifying a Guid attribute of the search provider (provider_identifier)
 //    // 3) the provider class type declared on the Package-derived class using the ProvideSearchProvider attribute
 //    // 4) the package must derive from ExtensionPointPackage for automatic extension creation.
-//    //    An alternate solution is for the package to implement IVsPackageExtensionProvider and create the search 
+//    //    An alternate solution is for the package to implement IVsPackageExtensionProvider and create the search
 //    //    provider when CreateExtensionPoint(typeof(IVsSearchProvider).GUID, provider_identifier) is called.
 //    //
-//    // Declare the search provider guid, to be used during registration 
+//    // Declare the search provider guid, to be used during registration
 //    // and during the provider's automatic creation as an extension point
 //    [Guid("55DC15FE-B1CD-40E2-B7DC-68012FCFE674")]
 //    public class MSDNSearchProvider : IVsSearchProvider
@@ -345,7 +342,7 @@ using Task = System.Threading.Tasks.Task;
 //            }
 //        }
 
-//        // MSDN Search Category Heading 
+//        // MSDN Search Category Heading
 //        public string DisplayText
 //        {
 //            get
@@ -365,14 +362,14 @@ using Task = System.Threading.Tasks.Task;
 
 //        protected IVsUIObject _resultsIcon = null;
 //        /// <summary>
-//        /// Returns the icon for each result. In this case, the same icon is returned for each result, 
+//        /// Returns the icon for each result. In this case, the same icon is returned for each result,
 //        /// so we'll use the same object to save memory and time creating the images.
 //        ///
 //        /// Helper classses in Microsoft.Internal.VisualStudio.PlatformUI can be used to construct an IVsUIObject of VsUIType.Icon type.
 //        /// Use Win32IconUIObject if you have an HICON, use WinFormsIconUIObject if you have a System.Drawing.Icon, or
 //        /// use WpfPropertyValue.CreateIconObject() if you have a WPF ImageSource.
 //        /// There are also similar classes and functions that can be used to create objects implementing IVsUIObject of type VsUIType.Bitmap
-//        /// starting from a bitmap image (e.g. Win32BitmapUIObject, WpfPropertyValue.CreateBitmapObject). 
+//        /// starting from a bitmap image (e.g. Win32BitmapUIObject, WpfPropertyValue.CreateBitmapObject).
 //        /// </summary>
 //        public IVsUIObject ResultsIcon
 //        {
@@ -719,8 +716,8 @@ namespace resource.package
 
             public int OnAfterOpenSolution(object pUnkReserved, int fNewSolution)
             {
-                var a_Workspace = GetWorkspaceService();
-                var a_Context111 = a_Workspace.CurrentWorkspace?.GetFindFilesService();
+                //var a_Workspace = GetWorkspaceService();
+                //var a_Context111 = a_Workspace.CurrentWorkspace?.GetFindFilesService();
                 return 0;
             }
 
@@ -740,17 +737,17 @@ namespace resource.package
             }
         }
 
-        private static IVsFolderWorkspaceService GetWorkspaceService()
-        {
-            IComponentModel componentModel = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel).GUID) as IComponentModel;
-            var workspaceServices = componentModel.DefaultExportProvider.GetExports<IVsFolderWorkspaceService>();
+        //private static IVsFolderWorkspaceService GetWorkspaceService()
+        //{
+        //    IComponentModel componentModel = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel).GUID) as IComponentModel;
+        //    var workspaceServices = componentModel.DefaultExportProvider.GetExports<IVsFolderWorkspaceService>();
 
-            if (workspaceServices != null && workspaceServices.Any())
-            {
-                return workspaceServices.First().Value;
-            }
-            return null;
-        }
+        //    if (workspaceServices != null && workspaceServices.Any())
+        //    {
+        //        return workspaceServices.First().Value;
+        //    }
+        //    return null;
+        //}
 
         internal static class CONSTANT
         {
@@ -762,85 +759,9 @@ namespace resource.package
             public const string VERSION = "1.0.1";
         }
 
-        internal class InfoBarService : IVsInfoBarUIEvents
-        {
-            private static uint s_Cookie = 0;
-
-            public static void Validate()
-            {
-                try
-                {
-                    ThreadHelper.ThrowIfNotOnUIThread();
-                    if (string.IsNullOrEmpty(atom.Trace.GetFailState(CONSTANT.APPLICATION)) == false)
-                    {
-                        var a_Context1 = Package.GetGlobalService(typeof(SVsInfoBarUIFactory)) as IVsInfoBarUIFactory;
-                        var a_Context2 = (IVsInfoBarHost)null;
-                        if (a_Context1 != null)
-                        {
-                            var a_Context3 = Package.GetGlobalService(typeof(SVsShell)) as IVsShell;
-                            var a_Context4 = (object)null;
-                            if (a_Context3 != null)
-                            {
-                                a_Context3.GetProperty((int)__VSSPROPID7.VSSPROPID_MainWindowInfoBarHost, out a_Context4);
-                                a_Context2 = (IVsInfoBarHost)a_Context4;
-                            }
-                        }
-                        if (a_Context2 != null)
-                        {
-                            var a_Context3 = a_Context1.CreateInfoBar(new InfoBarModel(
-                                textSpans: new[]
-                                {
-                                    new InfoBarTextSpan(CONSTANT.NAME, true),
-                                    new InfoBarTextSpan(" extension doesn't work without "),
-                                    new InfoBarTextSpan("MetaOutput", true),
-                                    new InfoBarTextSpan("! Please install it.")
-                                },
-                                actionItems: new[]
-                                {
-                                    new InfoBarButton("Install MetaOutput")
-                                },
-                                image: KnownMonikers.StatusError));
-                            {
-                                a_Context3.Advise(new InfoBarService(), out s_Cookie);
-                                a_Context2.AddInfoBar(a_Context3);
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-
-            public void OnClosed(IVsInfoBarUIElement infoBar)
-            {
-                try
-                {
-                    infoBar.Unadvise(s_Cookie);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-
-            public void OnActionItemClicked(IVsInfoBarUIElement infoBar, IVsInfoBarActionItem action)
-            {
-                try
-                {
-                    System.Diagnostics.Process.Start(atom.Trace.GetFailState(CONSTANT.APPLICATION));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.ToString());
-                }
-            }
-        }
-
         private Events s_Events = null;
         private FindEvents s_FindEvents = null;
-        private IVsFolderWorkspaceService s_WorkspaceService = null;
+        //private IVsFolderWorkspaceService s_WorkspaceService = null;
         //private Package s_Package = null;
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
@@ -852,8 +773,37 @@ namespace resource.package
             {
                 await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             }
+            try
             {
-                InfoBarService.Validate();
+                if (string.IsNullOrEmpty(atom.Trace.GetFailState(CONSTANT.APPLICATION)) == false)
+                {
+                    var a_Context = Package.GetGlobalService(typeof(SDTE)) as DTE2;
+                    if (a_Context != null)
+                    {
+                        var a_Context1 = (OutputWindowPane)null;
+                        for (var i = a_Context.ToolWindows.OutputWindow.OutputWindowPanes.Count; i >= 1; i--)
+                        {
+                            if (a_Context.ToolWindows.OutputWindow.OutputWindowPanes.Item(i).Name == "MetaOutput")
+                            {
+                                a_Context1 = a_Context.ToolWindows.OutputWindow.OutputWindowPanes.Item(i);
+                                break;
+                            }
+                        }
+                        if (a_Context1 == null)
+                        {
+                            a_Context1 = a_Context.ToolWindows.OutputWindow.OutputWindowPanes.Add("MetaOutput");
+                        }
+                        if (a_Context1 != null)
+                        {
+                            a_Context1.OutputString("\r\n" + CONSTANT.NAME + " extension doesn't work without MetaOutput.\r\n    Please install it (https://www.metaoutput.net/download)\r\n");
+                            a_Context1.Activate();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
             }
             {
                 Package s_Package = this;
@@ -871,7 +821,7 @@ namespace resource.package
             //{
             //    var a_Context = GetGlobalService(typeof(DTE)) as DTE2;
             //    s_Events = a_Context.Events;
-            //    s_FindEvents = s_Events.FindEvents;                
+            //    s_FindEvents = s_Events.FindEvents;
             //    //s_FindEvents.FindDone += __FindEvents_FindDone;
             //    a_Context = a_Context;
             //}
@@ -916,8 +866,8 @@ namespace resource.package
 
         public static void __FindEvents_FindDone(vsFindResult Result, bool Cancelled)
         {
-            var a_Workspace = GetWorkspaceService();
-            var a_Context111 = a_Workspace.CurrentWorkspace?.GetFindFilesService();
+            //var a_Workspace = GetWorkspaceService();
+            //var a_Context111 = a_Workspace.CurrentWorkspace?.GetFindFilesService();
         }
 
         protected override int QueryClose(out bool canClose)
