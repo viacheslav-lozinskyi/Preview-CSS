@@ -759,8 +759,8 @@ namespace resource.package
             public const string VERSION = "1.0.1";
         }
 
-        private Events s_Events = null;
-        private FindEvents s_FindEvents = null;
+        //private Events s_Events = null;
+        //private FindEvents s_FindEvents = null;
         //private IVsFolderWorkspaceService s_WorkspaceService = null;
         //private Package s_Package = null;
 
