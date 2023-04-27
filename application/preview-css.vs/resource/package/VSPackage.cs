@@ -752,6 +752,7 @@ namespace resource.package
         internal static class CONSTANT
         {
             public const string APPLICATION = "Visual Studio";
+            public const string COMPANY = "Viacheslav Lozinskyi";
             public const string COPYRIGHT = "Copyright (c) 2020-2023 by Viacheslav Lozinskyi. All rights reserved.";
             public const string DESCRIPTION = "Quick preview of CSS files";
             public const string GUID = "C6915272-78B1-4B1E-A31C-00BACBE2A500";
